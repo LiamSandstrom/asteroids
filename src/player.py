@@ -1,6 +1,6 @@
 import pygame
 from src.circleshape import CircleShape
-from src.constants import LINE_WIDTH, PLAYER_RADIUS, PLAYER_SPEED, PLAYER_TURN_SPEED
+from src.constants import LINE_WIDTH, PLAYER_ACCELERATION_AMOUNT, PLAYER_DEACCELERATION_AMOUNT, PLAYER_RADIUS, PLAYER_SPEED, PLAYER_TURN_SPEED
 
 
 class Player(CircleShape):
@@ -34,10 +34,10 @@ class Player(CircleShape):
             self.rotate(dt)
         if keys[pygame.K_w]:
             if self.forwardLast == True :
-                self.inc_acceleration()
+                self.inc_acceleration(dt)
             else:
                 self.is_accelerating = False
-                self.dec_acceleration()
+                self.dec_acceleration(dt)
                 
 
             self.move(dt)
@@ -45,30 +45,30 @@ class Player(CircleShape):
 
         if keys[pygame.K_s]:
             if self.forwardLast == False :
-                self.inc_acceleration()
+                self.inc_acceleration(dt)
             else:
-                self.dec_acceleration()
+                self.dec_acceleration(dt)
 
 
             self.move(dt * - 1)
             return
 
-        self.dec_acceleration()
+        self.dec_acceleration(dt)
         
 
-    def inc_acceleration(self):
+    def inc_acceleration(self, dt):
         if self.acceleration >= 2:
             self.acceleration = 2
             return
 
-        self.acceleration += 0.02
+        self.acceleration += PLAYER_ACCELERATION_AMOUNT * dt
 
-    def dec_acceleration(self):
+    def dec_acceleration(self, dt):
         if self.acceleration <= 1:
             self.acceleration = 1
             self.forwardLast = not self.forwardLast
             return
-        self.acceleration -= 0.1
+        self.acceleration -= (PLAYER_DEACCELERATION_AMOUNT + (self.acceleration * 0.25 - 1)) *  dt 
 
     def move(self, dt):
         unit_vector = pygame.Vector2(0, 1)
