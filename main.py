@@ -20,8 +20,9 @@ def main():
         log_state()
 
         render(screen, player, dt)
+        print(player.acceleration)
 
-        dt = clock.tick(60) / 1000
+        dt = clock.tick(144) / 1000
 
 
 
