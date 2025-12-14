@@ -1,21 +1,26 @@
 import pygame
+from src.asteroid import Asteroid
 from src.player import Player
+from src.asteroidfield import AsteroidField
 from src.constants import SCREEN_HEIGHT, SCREEN_WIDTH
 from logger import log_state
 
 def main():
     updatable = pygame.sprite.Group()
     drawable = pygame.sprite.Group()
+    asteroids = pygame.sprite.Group()
     Player.containers = (updatable, drawable)
+    Asteroid.containers = (asteroids, updatable, drawable)
+    AsteroidField.containers = (updatable)
 
     clock = pygame.time.Clock()
     dt = 0
 
     pygame.init()
-
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
     player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
+    asteroids = AsteroidField();
 
 
     while True:
@@ -26,7 +31,6 @@ def main():
         print(player.acceleration)
 
         dt = clock.tick(144) / 1000
-
 
 
 def render(screen, group):
@@ -45,9 +49,6 @@ def player_is_quiting():
         if event.type == pygame.QUIT:
             return True
     return False
-
-
-
 
 if __name__ == "__main__":
     main()
